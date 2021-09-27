@@ -1,21 +1,36 @@
-import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import AppLoading from 'expo-app-loading';
+import { useFonts } from 'expo-font';
+import * as React from 'react';
+import Onboarding from './src/Auth/Onboarding';
 
-export default function App() {
+const fonts = {
+  "SFProText-Bold": require("./assets/fonts/SF-Pro-Text-Bold.otf"),
+  "SFProText-Semibold": require("./assets/fonts/SF-Pro-Text-Semibold.otf"),
+  "SFProText-Regular": require("./assets/fonts/SF-Pro-Text-Regular.otf"),
+};
+
+
+const AuthStack = createStackNavigator()
+const AuthNavigator = () => {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
+    <AuthStack.Navigator>
+      <AuthStack.Screen  options={{ headerShown: false }}  name='Onboarding' component={Onboarding} />
+    </AuthStack.Navigator>
+  )
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+export default function App() {
+  let [fontsLoaded] = useFonts(fonts)
+
+  if (!fontsLoaded) {
+    return <AppLoading />
+  } else {
+    return (
+      <NavigationContainer>
+        <AuthNavigator />
+      </NavigationContainer>
+    )
+  }
+}
